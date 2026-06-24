@@ -8,16 +8,15 @@ services:
     command: ["hermes", "gateway", "run", "--accept-hooks"]
     volumes:
       - ./hermes_data:/opt/data
-      - ./repos:/workspace:rw
     environment:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - TELEGRAM_ALLOWED_USERS=${TELEGRAM_USER_ID}
-      - LM_BASE_URL=http://host.docker.internal:1234/v1
+      - TELEGRAM_ALLOWED_USERS=${TELEGRAM_ALLOWED_USERS}
+      - LM_BASE_URL=${LM_STUDIO_BASE_URL}
       - LM_API_KEY=${LM_STUDIO_API_TOKEN}
       - WORKSPACE_DIR=/workspace
       - HERMES_DASHBOARD=1
       - HERMES_DASHBOARD_HOST=0.0.0.0
-      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin
+      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=${HERMES_DASHBOARD_BASIC_AUTH_USERNAME}
       - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH=${HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH}
       - HERMES_DASHBOARD_BASIC_AUTH_SECRET=${HERMES_DASHBOARD_BASIC_AUTH_SECRET}
     ports:
