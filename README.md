@@ -17,7 +17,13 @@
 - Install Docker Desktop
 - Copy .env.template to .env
 - Input the values in the .env file by following the guideline in the file
-- Run ./start.sh
+- Run `./start.sh`
 
 You can set MacOS to auto-start it on startup. Google for instruction.
+
+# Run Hermes Setup
+
+- Run: `docker compose exec hermes-agent bash`
+- Run: `hermes setup`
+- Run: `hermes gateway restart`
 

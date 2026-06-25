@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   hermes-agent:
     image: nousresearch/hermes-agent:main
@@ -9,17 +7,10 @@ services:
     volumes:
       - ./hermes_data:/opt/data
     environment:
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - TELEGRAM_ALLOWED_USERS=${TELEGRAM_ALLOWED_USERS}
-      - LM_BASE_URL=${LM_STUDIO_BASE_URL}
-      - LM_API_KEY=${LM_STUDIO_API_TOKEN}
       - WORKSPACE_DIR=/workspace
       - HERMES_DASHBOARD=1
       - HERMES_DASHBOARD_HOST=0.0.0.0
-      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=${HERMES_DASHBOARD_BASIC_AUTH_USERNAME}
-      - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH=${HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH}
-      - HERMES_DASHBOARD_BASIC_AUTH_SECRET=${HERMES_DASHBOARD_BASIC_AUTH_SECRET}
     ports:
-      - "9119:9119"
+      - "127.0.0.1:9119:9119"
     extra_hosts:
       - "host.docker.internal:host-gateway"
