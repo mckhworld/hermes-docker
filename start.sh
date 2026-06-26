@@ -5,6 +5,7 @@ echo "========================================="
 
 # Ensure data and host repos directories exist with current user permissions
 mkdir -p ./hermes_data
+mkdir -p ./workspace
 
 # Start the docker containers
 docker compose up -d

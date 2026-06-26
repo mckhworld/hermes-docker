@@ -6,8 +6,9 @@ services:
     command: ["hermes", "gateway", "run", "--accept-hooks"]
     volumes:
       - ./hermes_data:/opt/data
+      - ./workspace:/workspace
     environment:
-      - WORKSPACE_DIR=/workspace
+      - TERMINAL_DOCKER_MOUNT_CWD_TO_WORKSPACE=true
       - HERMES_DASHBOARD=1
       - HERMES_DASHBOARD_HOST=0.0.0.0
     ports:
