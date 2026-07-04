@@ -7,11 +7,13 @@ services:
     volumes:
       - ./hermes_data:/opt/data
       - ./workspace:/workspace
+    env_file:
+      - .env
     environment:
-      - TERMINAL_DOCKER_MOUNT_CWD_TO_WORKSPACE=true
       - HERMES_DASHBOARD=1
       - HERMES_DASHBOARD_HOST=0.0.0.0
     ports:
+#      - "9119:9119"
       - "127.0.0.1:9119:9119"
     extra_hosts:
       - "host.docker.internal:host-gateway"
