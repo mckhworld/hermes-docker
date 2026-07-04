@@ -8,6 +8,6 @@ mkdir -p ./hermes_data
 mkdir -p ./workspace
 
 # Start the docker containers
-docker compose up -d
+docker compose --env-file ./.env up -d
 
 echo "========================================="
