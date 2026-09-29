@@ -1,8 +1,11 @@
 services:
   hermes-agent:
-    image: nousresearch/hermes-agent:main
+    build: .
+    image: hermes-agent:local
     container_name: hermes_agent_sandbox
     restart: unless-stopped
+    # No entrypoint override: the image's /init (s6-overlay) supervises the
+    # gateway (crash-restart) and the dashboard service (HERMES_DASHBOARD=1)
     command: ["hermes", "gateway", "run", "--accept-hooks"]
     volumes:
       - ./hermes_data:/opt/data
@@ -10,8 +13,17 @@ services:
     env_file:
       - .env
     environment:
+      # Match container file ownership to the host user (s6 stage2 hook remaps
+      # the hermes user to these UIDs and chowns the data volume)
+      - HERMES_UID=${HERMES_UID:-10000}
+      - HERMES_GID=${HERMES_GID:-10000}
+      # Supervised dashboard service: auto-starts with the container
       - HERMES_DASHBOARD=1
       - HERMES_DASHBOARD_HOST=0.0.0.0
+      # Required to bind non-loopback; safe here because the port is published
+      # on 127.0.0.1 only and basic auth (HERMES_DASHBOARD_BASIC_AUTH_*) engages
+      - HERMES_DASHBOARD_INSECURE=1
+      - GOOGLE_WORKSPACE_CLI_CONFIG_DIR=/opt/data/home/.config/gws
     ports:
 #      - "9119:9119"
       - "127.0.0.1:9119:9119"

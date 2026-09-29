@@ -7,7 +7,11 @@ echo "========================================="
 mkdir -p ./hermes_data
 mkdir -p ./workspace
 
-# Start the docker containers
-docker compose --env-file ./.env up -d
+# Container file ownership: match host user so files are readable/writable on host
+export HERMES_UID=$(id -u)
+export HERMES_GID=$(id -g)
+
+# Build image if Dockerfile/context changed, then start containers
+docker compose --env-file ./.env up --build -d
 
 echo "========================================="

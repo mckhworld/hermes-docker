@@ -25,5 +25,16 @@ You can set MacOS to auto-start it on startup. Google for instruction.
 
 - Run: `docker compose exec hermes-agent bash`
 - Run: `hermes setup`
-- Run: `hermes gateway restart`
+
+# Hermes Dashboard (Web UI)
+
+- The dashboard auto-starts with the container (supervised by s6 via the
+  image's built-in `/init` entrypoint) and the gateway is crash-restarted
+  automatically — do not override the entrypoint (see Dockerfile note)
+- Open `http://127.0.0.1:9119` in a host browser; log in with the basic auth
+  credentials from `.env` (username / scrypt password hash)
+- The port is published to `127.0.0.1` only. To access from another machine,
+  use an SSH tunnel: `ssh -L 9119:localhost:9119 <host>`
+- To restart the gateway: `docker restart hermes_agent_sandbox`
+
 
