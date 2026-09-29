@@ -13,16 +13,18 @@ services:
     env_file:
       - .env
     environment:
-      # Match container file ownership to the host user (s6 stage2 hook remaps
-      # the hermes user to these UIDs and chowns the data volume)
+      # Match container file ownership to the host user; the s6 stage2 hook
+      # remaps the hermes user to these UIDs and chowns hermes-owned data
+      # paths at boot. start.sh derives them from the invoking user.
       - HERMES_UID=${HERMES_UID:-10000}
       - HERMES_GID=${HERMES_GID:-10000}
-      # Supervised dashboard service: auto-starts with the container
+      # Supervised dashboard service: auto-starts with the container.
+      # Must be 0.0.0.0 — the published host port forwards to the container's
+      # network IP, which cannot reach a 127.0.0.1 (loopback) container bind.
+      # No --insecure: the non-loopback bind engages the basic-auth gate
+      # (credentials in .env) instead of bypassing it.
       - HERMES_DASHBOARD=1
       - HERMES_DASHBOARD_HOST=0.0.0.0
-      # Required to bind non-loopback; safe here because the port is published
-      # on 127.0.0.1 only and basic auth (HERMES_DASHBOARD_BASIC_AUTH_*) engages
-      - HERMES_DASHBOARD_INSECURE=1
       - GOOGLE_WORKSPACE_CLI_CONFIG_DIR=/opt/data/home/.config/gws
     ports:
 #      - "9119:9119"
