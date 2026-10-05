@@ -26,6 +26,38 @@ You can set MacOS to auto-start it on startup. Google for instruction.
 - Run: `docker compose exec hermes-agent bash`
 - Run: `hermes setup`
 
+# Google Workspace (gws) credentials
+
+The container has `gws` installed but **cannot** log in itself: it has no
+browser for the OAuth flow, and it can't read the host's macOS-keychain-
+encrypted credentials (a Linux container has no keyring). So the host is the
+source of truth and you sync its decrypted credentials into the shared volume.
+
+The container reads its gws config from
+`/opt/data/home/.config/gws` (set via `GOOGLE_WORKSPACE_CLI_CONFIG_DIR` in
+`docker-compose.yml`), which is the host path `./hermes_data/home/.config/gws`.
+
+To sync (run on the **host**):
+
+```bash
+gws auth login     # one-time, or whenever the token has expired
+./gws-sync.sh      # copies credentials.json + client_secret.json into the volume
+```
+
+`gws-sync.sh` needs no container restart — gws re-reads `credentials.json` on
+each command, so the next gws call in the container uses the fresh token.
+
+**Why it "always expired" before:** the container's `credentials.json` held a
+stale/revoked OAuth `client_id` and its `client_secret.json` pointed at a
+different GCP project, so the token refresh failed. `gws-sync.sh` copies the
+host's *current* files, fixing both.
+
+**The 7-day expiry:** while your OAuth app's publishing status is **Testing**
+(Cloud Console → APIs & Services → OAuth consent screen), Google expires every
+refresh token after 7 days, no matter how often you use it. Re-run `gws-sync.sh`
+weekly, or set the consent screen to **In production** (unverified is fine for
+personal use) so refresh tokens last ~6 months instead.
+
 # Hermes Dashboard (Web UI)
 
 - The dashboard auto-starts with the container (supervised by s6 via the
