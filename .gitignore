@@ -1,4 +1,6 @@
 .env
+.env.*
+!.env.template
 hermes_data/
 workspace/
 .DS_Store
